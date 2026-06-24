@@ -50,6 +50,13 @@
   class="round-history-container"
   cdkDropList
   (cdkDropListDropped)="drop($event)">
+  @if (rounds().length === 0) {
+    <div class="rounds-empty-state">
+      <mat-icon>format_list_bulleted</mat-icon>
+      <p>No rounds yet</p>
+      <span>Add a round below to start your session.</span>
+    </div>
+  }
   @for (round of rounds(); track round.id; let roundNumber = $index) {
     @if ((editedRound | async)?.round.id !== round.id) {
       <mat-card
