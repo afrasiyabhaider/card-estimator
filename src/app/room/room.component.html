@@ -35,6 +35,7 @@
         }
       </div>
     </div>
+    @if (room()) {
     <div class="room-container">
       <div class="meta-container">
         <mat-card
@@ -126,14 +127,41 @@
         <app-github-badge />
       }
     </div>
-    @if (room()) {
-      <app-reactions-renderer [members]="members$" [roomId]="room().roomId" />
-      <app-carbon-ad
-        placement="app"
-        [isPremiumRoom]="
-          room().subscriptionMetadata?.createdWithPlan === 'premium' ||
-          room().subscriptionMetadata?.createdWithPlan === 'paid-credit'
-        " />
+    <app-reactions-renderer [members]="members$" [roomId]="room().roomId" />
+    <app-carbon-ad
+      placement="app"
+      [isPremiumRoom]="
+        room().subscriptionMetadata?.createdWithPlan === 'premium' ||
+        room().subscriptionMetadata?.createdWithPlan === 'paid-credit'
+      " />
+    } @else {
+    <div class="room-container skeleton-layout">
+      <div class="meta-container">
+        <div class="rounded-card skeleton-block topic-skeleton">
+          <div class="skeleton-line skeleton-line--title"></div>
+          <div class="skeleton-line skeleton-line--body"></div>
+        </div>
+        <div class="rounded-card skeleton-block members-skeleton">
+          @for (item of [1,2,3,4]; track item) {
+            <div class="skeleton-member-row">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-member-info">
+                <div class="skeleton-line skeleton-line--md"></div>
+                <div class="skeleton-line skeleton-line--sm"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="skeleton-control-col">
+        <div class="rounded-card skeleton-block control-skeleton"></div>
+      </div>
+    </div>
+    <div class="skeleton-deck-bar">
+      @for (item of [1,2,3,4,5,6,7]; track item) {
+        <div class="skeleton-card-chip"></div>
+      }
+    </div>
     }
   </mat-sidenav-content>
   <mat-sidenav #sidenav [mode]="'over'" position="end" class="topics-sidenav">
