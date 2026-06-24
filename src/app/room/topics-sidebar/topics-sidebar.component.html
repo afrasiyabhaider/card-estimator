@@ -58,13 +58,16 @@
         (click)="detailsPanel.toggle()"
         (keyup.enter)="detailsPanel.toggle()"
         tabindex="0"
-        cdkDrag>
+        cdkDrag
+        [cdkDragDisabled]="!canReorderRounds()">
         <mat-card-content>
           <div class="card-header">
             <span class="card-round-number">
-              <mat-icon matTooltip="Drag to reorder round" cdkDragHandle
-                >drag_indicator</mat-icon
-              >
+              @if (canReorderRounds()) {
+                <mat-icon matTooltip="Drag to reorder round" cdkDragHandle
+                  >drag_indicator</mat-icon
+                >
+              }
               #{{ roundNumber + 1 }}
               <mat-icon
                 [matTooltip]="

@@ -7,6 +7,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { APP_CONFIG, AppConfig } from 'src/app/app-config.module';
 import { AnalyticsService } from 'src/app/services/analytics.service';
@@ -86,6 +87,8 @@ export class TopicsSidebarComponent implements OnInit {
   currentRound = input.required<number>();
   roundStatistics = input.required<RoundStatistics[]>();
   selectedEstimationCardSetValue = input<CardSetValue | undefined>(undefined);
+
+  canReorderRounds = toSignal(this.permissionsService.canCreateRounds(), { initialValue: false });
 
   isAddingRound = signal<boolean>(false);
   editedRound = new BehaviorSubject<
@@ -174,6 +177,7 @@ export class TopicsSidebarComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<string[]>) {
+    if (!this.canReorderRounds()) return;
     this.showActiveRound.set(this.currentRound() !== event.previousIndex);
     const activeRoundId = this.room().rounds[this.currentRound()].id;
     const mutableRounds = [...this.rounds()];
