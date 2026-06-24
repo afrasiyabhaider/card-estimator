@@ -33,12 +33,30 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { combineLatest } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 function checkMatchesFilter(row: TableRow, filter: string): boolean {
-  return (
-    row.topicName.toLowerCase().includes(filter.toLowerCase()) ||
-    row.roomId.toLowerCase().includes(filter.toLowerCase())
-  );
+  if (!filter) return true;
+  try {
+    const { text, days } = JSON.parse(filter) as { text: string; days: number };
+    const textMatch =
+      !text ||
+      row.topicName.toLowerCase().includes(text.toLowerCase()) ||
+      row.roomId.toLowerCase().includes(text.toLowerCase());
+    if (!textMatch) return false;
+    if (!days) return true;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    const rowDate = (row.startedAt as Timestamp).toMillis();
+    return rowDate >= cutoff.getTime();
+  } catch {
+    return (
+      row.topicName.toLowerCase().includes(filter.toLowerCase()) ||
+      row.roomId.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
 }
 
 interface TableRow {
@@ -64,6 +82,7 @@ interface TableRow {
     MatPaginatorModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     RouterModule,
   ],
   providers: [CdkColumnDef],
@@ -77,6 +96,14 @@ export class RoundHistoryTableComponent
   @ViewChild(MatSort) sort!: MatSort;
 
   filter = new FormControl('', { nonNullable: true });
+  dateRange = new FormControl<number>(0, { nonNullable: true });
+
+  readonly dateRangeOptions = [
+    { label: 'All time', days: 0 },
+    { label: 'Last 7 days', days: 7 },
+    { label: 'Last 30 days', days: 30 },
+    { label: 'Last 90 days', days: 90 },
+  ];
 
   displayedColumns: string[] = [
     'topicName',
@@ -135,8 +162,11 @@ export class RoundHistoryTableComponent
       this.dataSource.data = rounds;
     });
 
-    this.filter.valueChanges.pipe(takeUntil(this.destroy)).subscribe(filter => {
-      this.dataSource.filter = filter;
+    combineLatest([
+      this.filter.valueChanges.pipe(startWith('')),
+      this.dateRange.valueChanges.pipe(startWith(0)),
+    ]).pipe(takeUntil(this.destroy)).subscribe(([text, days]) => {
+      this.dataSource.filter = JSON.stringify({ text, days });
 
       if (this.dataSource.paginator) {
         this.dataSource.paginator.firstPage();

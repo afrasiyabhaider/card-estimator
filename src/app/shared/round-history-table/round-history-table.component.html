@@ -1,11 +1,22 @@
-<mat-form-field class="filter-field" subscriptSizing="dynamic">
-  <mat-label>Search</mat-label>
-  <input
-    matInput
-    placeholder="Search for a topic name or room"
-    [formControl]="filter"
-    autocomplete="off" />
-</mat-form-field>
+<div class="filters-row">
+  <mat-form-field class="filter-field" subscriptSizing="dynamic">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      placeholder="Search for a topic name or room"
+      [formControl]="filter"
+      autocomplete="off" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <mat-form-field class="date-filter-field" subscriptSizing="dynamic">
+    <mat-label>Date range</mat-label>
+    <mat-select [formControl]="dateRange">
+      @for (option of dateRangeOptions; track option.days) {
+        <mat-option [value]="option.days">{{ option.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
 <mat-table [dataSource]="dataSource" class="rounds-table">
   <ng-container matColumnDef="topicName">
     <mat-header-cell *matHeaderCellDef>Topic</mat-header-cell>
