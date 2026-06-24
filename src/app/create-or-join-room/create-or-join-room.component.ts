@@ -24,6 +24,7 @@ import {
   of,
   Subject,
 } from 'rxjs';
+import { PaymentService } from '../services/payment.service';
 import {
   catchError,
   filter,
@@ -307,6 +308,17 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     },
   ];
 
+  creditsInfo$: Observable<{ count: number } | null> = this.user.pipe(
+    switchMap(user => {
+      if (!user || user.isAnonymous) return of(null);
+      return from(this.paymentService.getAndAssignCreditBundles()).pipe(
+        map(result => ({ count: result.availableCredits.length })),
+        catchError(() => of(null))
+      );
+    }),
+    shareReplay(1)
+  );
+
   // Recent sessions for authenticated users (limit to 3 to minimize database calls)
   recentSessions$: Observable<{ roomId: string; createdAt: Date; roundCount: number }[]> =
     this.user.pipe(
@@ -342,6 +354,7 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     private readonly meetService: MeetApiService,
     private readonly navigationService: NavigationService,
     private readonly toastService: ToastService,
+    private readonly paymentService: PaymentService,
     @Inject(APP_CONFIG) public readonly config: AppConfig
   ) {}
 
@@ -609,5 +622,9 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
     this.router.navigate([], {
       queryParams: { roomId: null },
     });
+  }
+
+  openPricingModal() {
+    this.dialog.open(...pricingModalCreator());
   }
 }

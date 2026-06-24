@@ -151,6 +151,21 @@
           <mat-icon>add</mat-icon>
           Create room
         </button>
+        @if (creditsInfo$ | async; as credits) {
+          @if (credits.count === 0) {
+            <p class="credits-hint credits-hint--empty">
+              <mat-icon inline>warning</mat-icon>
+              No credits left — <a (click)="openPricingModal()">top up</a> to create a room.
+            </p>
+          } @else if (credits.count === 1) {
+            <p class="credits-hint credits-hint--low">
+              <mat-icon inline>info</mat-icon>
+              1 credit remaining — running low. <a (click)="openPricingModal()">Top up</a>.
+            </p>
+          } @else {
+            <p class="credits-hint">{{ credits.count }} credits remaining</p>
+          }
+        }
         @if (!viewModel.user) {
           <ng-container *ngTemplateOutlet="terms"></ng-container>
         }
