@@ -307,6 +307,12 @@
             spellcheck="false"
             required
             id="room-id" />
+          @if (roomId.dirty && roomId.hasError('required')) {
+            <mat-error>Room ID is required</mat-error>
+          }
+          @if (roomId.dirty && roomId.hasError('minlength')) {
+            <mat-error>Room ID is too short</mat-error>
+          }
         </mat-form-field>
       </ng-template>
       <ng-template #nameTemplate>
@@ -320,6 +326,12 @@
             (blur)="onNameBlur()"
             required
             id="name" />
+          @if (name.dirty && name.hasError('required')) {
+            <mat-error>Name is required</mat-error>
+          }
+          @if (name.dirty && name.hasError('minlength')) {
+            <mat-error>Name must be at least 2 characters</mat-error>
+          }
         </mat-form-field>
       </ng-template>
       <ng-template #joinMode>

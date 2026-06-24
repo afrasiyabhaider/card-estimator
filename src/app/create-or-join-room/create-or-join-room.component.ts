@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -153,8 +153,8 @@ const LOADING_MESSAGES = [
   animations: [fadeAnimation, delayedFadeAnimation, slideInRightAnimation],
 })
 export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
-  name = new FormControl<string>('');
-  roomId = new FormControl<string>('');
+  name = new FormControl<string>('', [Validators.required, Validators.minLength(2)]);
+  roomId = new FormControl<string>('', [Validators.required, Validators.minLength(3)]);
   joinAs = new FormControl<MemberType>(MemberType.ESTIMATOR);
 
   isBusy = new BehaviorSubject<boolean>(false);
