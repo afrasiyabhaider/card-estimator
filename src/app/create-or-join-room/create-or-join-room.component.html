@@ -156,11 +156,9 @@
         }
       </mat-card-content>
     } @else {
-      <mat-card-content class="loading-state">
-        <mat-progress-spinner
-          mode="indeterminate"
-        [diameter]="30"></mat-progress-spinner>
-        <span class="create-room-loading">{{ loadingMessage | async }} </span>
+      <mat-card-content class="loading-state creation-progress-state">
+        <span class="create-room-loading">{{ loadingMessage | async }}</span>
+        <mat-progress-bar mode="indeterminate" class="creation-progress-bar"></mat-progress-bar>
       </mat-card-content>
     }
   } @else {
