@@ -203,19 +203,26 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  newRound() {
+  async newRound() {
     this.analytics.logClickedNewRound();
-    this.estimatorService.newRound(this.room());
+    try {
+      await this.estimatorService.newRound(this.room());
+    } catch {
+      this.toastService.showMessage('Failed to start a new round. Please try again.');
+    }
   }
 
-  nextRound() {
+  async nextRound() {
     this.analytics.logClickedNextRound();
-
-    this.estimatorService.setActiveRound(
-      this.room(),
-      this.currentRound() + 1,
-      false
-    );
+    try {
+      await this.estimatorService.setActiveRound(
+        this.room(),
+        this.currentRound() + 1,
+        false
+      );
+    } catch {
+      this.toastService.showMessage('Failed to navigate to round. Please try again.');
+    }
   }
 
   changeLocalRound(diff: number) {
@@ -233,13 +240,17 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     this.analytics.logClickedChangeLocalRound();
   }
 
-  showResults() {
+  async showResults() {
     this.analytics.logClickedShowResults();
-    this.estimatorService.setShowResults(
-      this.room(),
-      this.currentRound(),
-      true
-    );
+    try {
+      await this.estimatorService.setShowResults(
+        this.room(),
+        this.currentRound(),
+        true
+      );
+    } catch {
+      this.toastService.showMessage('Failed to reveal cards. Please try again.');
+    }
   }
 
   openRoomConfigurationModal() {
@@ -293,14 +304,18 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
         negativeText: 'Cancel',
       })
     ) {
-      if (this.estimatorService.activeMember) {
-        await this.estimatorService.updateMemberStatus(
-          this.room().roomId,
-          this.estimatorService.activeMember,
-          MemberStatus.LEFT_ROOM
-        );
+      try {
+        if (this.estimatorService.activeMember) {
+          await this.estimatorService.updateMemberStatus(
+            this.room().roomId,
+            this.estimatorService.activeMember,
+            MemberStatus.LEFT_ROOM
+          );
+        }
+        this.router.navigate(['join']);
+      } catch {
+        this.toastService.showMessage('Failed to leave room. Please try again.');
       }
-      this.router.navigate(['join']);
     }
   }
 

@@ -100,23 +100,31 @@ export class CardDeckComponent implements OnInit, OnDestroy {
     this.onDestroy.complete();
   }
 
-  setEstimate(amount: string) {
+  async setEstimate(amount: string) {
     this.analytics.logClickedVoteOption();
-    this.estimatorService.setEstimate(
-      this.room(),
-      this.currentRound(),
-      +amount,
-      this.estimatorService.activeMember.id
-    );
+    try {
+      await this.estimatorService.setEstimate(
+        this.room(),
+        this.currentRound(),
+        +amount,
+        this.estimatorService.activeMember.id
+      );
+    } catch {
+      this.toastService.showMessage('Failed to submit vote. Please try again.');
+    }
   }
 
-  setWildcard() {
-    this.estimatorService.setEstimate(
-      this.room(),
-      this.currentRound(),
-      null,
-      this.estimatorService.activeMember.id
-    );
+  async setWildcard() {
+    try {
+      await this.estimatorService.setEstimate(
+        this.room(),
+        this.currentRound(),
+        null,
+        this.estimatorService.activeMember.id
+      );
+    } catch {
+      this.toastService.showMessage('Failed to submit vote. Please try again.');
+    }
   }
 
   toggleReactions() {

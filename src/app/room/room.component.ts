@@ -892,12 +892,16 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   async topicBlur(event: TopicEditorInputOutput) {
     this.isEditingTopic.set(false);
-    await this.estimatorService.setTopic(
-      this.room(),
-      this.currentRound(),
-      event.topic,
-      event.richTopic
-    );
+    try {
+      await this.estimatorService.setTopic(
+        this.room(),
+        this.currentRound(),
+        event.topic,
+        event.richTopic
+      );
+    } catch {
+      this.toastService.showMessage('Failed to update topic. Please try again.');
+    }
   }
 
   onTopicClicked() {
