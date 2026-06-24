@@ -145,6 +145,9 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
 
   readonly localActiveRound = this.roomDataService.localActiveRound;
 
+  revealCountdown = signal<number | null>(null);
+  private revealCountdownHandle: ReturnType<typeof setInterval> | null = null;
+
   readonly newRoundClicked = new Subject<void>();
   readonly newRoundButtonCooldownState$ = createCooldownState();
 
@@ -201,7 +204,11 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    if (this.revealCountdownHandle !== null) {
+      clearInterval(this.revealCountdownHandle);
+    }
+  }
 
   newRound() {
     this.analytics.logClickedNewRound();
@@ -234,12 +241,34 @@ export class RoomControllerPanelComponent implements OnInit, OnDestroy {
   }
 
   showResults() {
+    if (this.revealCountdown() !== null) {
+      if (this.revealCountdownHandle !== null) {
+        clearInterval(this.revealCountdownHandle);
+        this.revealCountdownHandle = null;
+      }
+      this.revealCountdown.set(null);
+      return;
+    }
+
     this.analytics.logClickedShowResults();
-    this.estimatorService.setShowResults(
-      this.room(),
-      this.currentRound(),
-      true
-    );
+    this.revealCountdown.set(3);
+
+    this.revealCountdownHandle = setInterval(() => {
+      const current = this.revealCountdown();
+      if (current === null) {
+        clearInterval(this.revealCountdownHandle);
+        this.revealCountdownHandle = null;
+        return;
+      }
+      if (current <= 1) {
+        clearInterval(this.revealCountdownHandle);
+        this.revealCountdownHandle = null;
+        this.revealCountdown.set(null);
+        this.estimatorService.setShowResults(this.room(), this.currentRound(), true);
+      } else {
+        this.revealCountdown.set(current - 1);
+      }
+    }, 1000);
   }
 
   openRoomConfigurationModal() {

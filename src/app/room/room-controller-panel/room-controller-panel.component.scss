@@ -22,6 +22,10 @@
     height: 3rem;
     flex: 1 1 100%;
     border-radius: var(--radius-md);
+
+    &.countdown-active {
+      animation: countdown-pulse 1s ease-in-out infinite;
+    }
   }
 
   .split-action-button-container-side-button {
@@ -332,10 +336,17 @@
   .mini-action-button {
     opacity: 0.8;
     transition: opacity 0.15s ease;
-    
+
     &:hover:not(:disabled) {
       opacity: 1;
     }
+  }
+
+  .countdown-badge {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    color: inherit;
   }
 
   @include extraSmallScreen {
@@ -356,6 +367,11 @@
       }
     }
   }
+}
+
+@keyframes countdown-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
 }
 
 .alert {

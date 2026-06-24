@@ -100,14 +100,20 @@
                 !(permissionsService.canRevealResults() | async)
               "
               id="reveal-results-button"
-              class="main-split-button">
+              class="main-split-button"
+              [class.countdown-active]="revealCountdown() !== null">
               <div class="center-icon-button">
-                <mat-icon>visibility</mat-icon>
-                {{
-                  (room()?.rounds)[currentRound()]?.show_results
-                    ? 'Votes revealed'
-                    : 'Reveal votes'
-                }}
+                @if (revealCountdown() !== null) {
+                  <mat-icon>timer</mat-icon>
+                  Revealing in {{ revealCountdown() }}...
+                } @else {
+                  <mat-icon>visibility</mat-icon>
+                  {{
+                    (room()?.rounds)[currentRound()]?.show_results
+                      ? 'Votes revealed'
+                      : 'Reveal votes'
+                  }}
+                }
               </div>
             </button>
             <div
@@ -273,11 +279,15 @@
               (room()?.rounds)[currentRound()]?.show_results ||
               !(permissionsService.canRevealResults() | async)
             "
-            matTooltip="Reveal results"
+            [matTooltip]="revealCountdown() !== null ? 'Tap to cancel' : 'Reveal results'"
             [matTooltipPosition]="isSmallScreen() ? 'below' : 'left'"
             class="mini-action-button"
             id="reveal-results-button">
-            <mat-icon>visibility</mat-icon>
+            @if (revealCountdown() !== null) {
+              <span class="countdown-badge">{{ revealCountdown() }}</span>
+            } @else {
+              <mat-icon>visibility</mat-icon>
+            }
           </button>
         }
         @if (room().isAsyncVotingEnabled) {
