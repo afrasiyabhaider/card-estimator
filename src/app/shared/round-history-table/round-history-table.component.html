@@ -1,3 +1,29 @@
+@if (sessionSummaries$ | async; as sessions) {
+  @if (sessions.length > 0) {
+    <div class="session-summaries">
+      <h3 class="summaries-heading">Sessions</h3>
+      <div class="summaries-scroll">
+        @for (session of sessions; track session.roomId) {
+          <a [routerLink]="['/room', session.roomId]" class="session-summary-card">
+            <div class="summary-room-id">{{ session.roomId }}</div>
+            <div class="summary-meta">
+              <span class="summary-stat">
+                <span class="stat-value">{{ session.roundCount }}</span>
+                <span class="stat-label">rounds</span>
+              </span>
+              <span class="summary-divider">·</span>
+              <span class="summary-stat">
+                <span class="stat-value">{{ session.overallAverage }}</span>
+                <span class="stat-label">avg</span>
+              </span>
+            </div>
+            <div class="summary-date">{{ session.createdAt | date:'MMM d, y' }}</div>
+          </a>
+        }
+      </div>
+    </div>
+  }
+}
 <mat-form-field class="filter-field" subscriptSizing="dynamic">
   <mat-label>Search</mat-label>
   <input

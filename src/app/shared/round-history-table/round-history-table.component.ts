@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -33,6 +33,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+
+interface SessionSummary {
+  roomId: string;
+  createdAt: Date;
+  roundCount: number;
+  overallAverage: string;
+}
 
 function checkMatchesFilter(row: TableRow, filter: string): boolean {
   return (
@@ -64,9 +73,11 @@ interface TableRow {
     MatPaginatorModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatCardModule,
+    MatChipsModule,
     RouterModule,
   ],
-  providers: [CdkColumnDef],
+  providers: [CdkColumnDef, DatePipe],
   templateUrl: './round-history-table.component.html',
   styleUrls: ['./round-history-table.component.scss'],
 })
@@ -88,6 +99,25 @@ export class RoundHistoryTableComponent
   ];
 
   isLoading = new BehaviorSubject(true);
+
+  sessionSummaries$: Observable<SessionSummary[]> = this.estimatorService.getPreviousSessions().pipe(
+    map(rooms => rooms.map(room => {
+      const rounds = Object.values(room.rounds || {});
+      const stats = new ExportData(room);
+      const numericAverages = stats.rows
+        .map(r => parseFloat(r.average))
+        .filter(v => !isNaN(v));
+      const overallAvg = numericAverages.length
+        ? numericAverages.reduce((a, b) => a + b, 0) / numericAverages.length
+        : null;
+      return {
+        roomId: room.roomId,
+        createdAt: (room.createdAt as any)?.toDate?.() || new Date(),
+        roundCount: rounds.length,
+        overallAverage: overallAvg !== null ? overallAvg.toFixed(1) : '—',
+      } as SessionSummary;
+    }))
+  );
 
   previousRounds: Observable<TableRow[]> = of(undefined).pipe(
     tap(() => this.isLoading.next(true)),

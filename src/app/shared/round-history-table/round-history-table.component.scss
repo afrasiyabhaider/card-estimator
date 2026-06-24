@@ -87,3 +87,88 @@ a {
 .notes-header {
   margin-right: 4px;
 }
+
+.session-summaries {
+  margin-bottom: 1.5rem;
+}
+
+.summaries-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-card-subtitle-text-color);
+  margin: 0 0 0.75rem;
+}
+
+.summaries-scroll {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.session-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border-color);
+  background: var(--main-color);
+  text-decoration: none !important;
+  color: var(--text-color);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  min-width: 140px;
+  max-width: 180px;
+
+  &:hover {
+    border-color: var(--primary-color, #345ca8);
+    box-shadow: 0 2px 12px rgba(52, 92, 168, 0.15);
+    text-decoration: none !important;
+  }
+}
+
+.summary-room-id {
+  font-size: 0.85rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--primary-color, #345ca8);
+}
+
+.summary-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.summary-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--mat-card-subtitle-text-color);
+}
+
+.summary-divider {
+  color: var(--mat-card-subtitle-text-color);
+}
+
+.summary-date {
+  font-size: 0.72rem;
+  color: var(--mat-card-subtitle-text-color);
+}
