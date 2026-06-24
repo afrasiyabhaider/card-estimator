@@ -855,3 +855,27 @@ body {
     border-color: var(--mat-button-outlined-disabled-outline-color);
   }
 }
+
+:root {
+  --focus-ring-color: #345ca8;
+  --focus-ring-offset: 2px;
+}
+
+.dark-theme {
+  --focus-ring-color: #7baaf7;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role='radio']:focus-visible,
+[role='button']:focus-visible,
+mat-button-toggle:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
