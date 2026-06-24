@@ -266,9 +266,10 @@
                         mat-icon-button
                         class="nudge-button"
                         (click)="nudgeMember(member)"
+                        [attr.aria-label]="'Nudge ' + member.name + ' to vote'"
                         [matTooltip]="'Nudge ' + member.name + ' to vote'"
                         matTooltipPosition="above">
-                        <mat-icon>notifications_active</mat-icon>
+                        <mat-icon aria-hidden="true">notifications_active</mat-icon>
                       </button>
                     }
                     <div class="vote vote-waiting" matTooltip="Waiting to vote">
@@ -307,7 +308,7 @@
                       : 'Member has already voted'
               "
               matTooltipPosition="above">
-              <mat-icon>notifications_active</mat-icon> Nudge
+              <mat-icon aria-hidden="true">notifications_active</mat-icon> Nudge
             </button>
             @if (room().createdById === currentUserId()) {
               <mat-divider />
