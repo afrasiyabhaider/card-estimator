@@ -554,6 +554,7 @@ export interface UserPreference {
   activeOrganizationId?: string;
   onboardingTutorialShown?: boolean;
   defaultRoomTemplateId?: SlotId | null;
+  lastUsedCardSet?: string;
 }
 
 export interface Credit {

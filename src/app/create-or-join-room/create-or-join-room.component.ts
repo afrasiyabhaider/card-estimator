@@ -4,6 +4,7 @@ import { EstimatorService } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  CardSet,
   Member,
   MemberType,
   MemberStatus,
@@ -588,6 +589,16 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         if (template) {
           await this.estimatorService.applyTemplate(room, template);
         }
+      }
+
+      if (
+        userPreference?.lastUsedCardSet &&
+        userPreference.lastUsedCardSet !== CardSet.DEFAULT
+      ) {
+        await this.estimatorService.setRoomCardSet(
+          room.roomId,
+          userPreference.lastUsedCardSet as CardSet
+        );
       }
     } catch (error) {
       console.error(error);

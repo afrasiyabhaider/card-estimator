@@ -19,6 +19,7 @@ import { EstimatorService } from 'src/app/services/estimator.service';
 import { CardDeckService } from 'src/app/services/card-deck.service';
 import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { AuthService } from 'src/app/services/auth.service';
 import {
   CardSetValue,
   CustomCardSet,
@@ -83,7 +84,8 @@ export class CardSetsModalComponent {
     private readonly estimatorService: EstimatorService,
     private readonly cardDeckService: CardDeckService,
     private readonly confirmService: ConfirmDialogService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly authService: AuthService
   ) {
     this.room = data.room;
     this.estimationCardSets = data.estimationCardSets;
@@ -104,13 +106,11 @@ export class CardSetsModalComponent {
     this.analytics.logSelectedCardSet(cardSet.key);
     this.selectedKey = cardSet.key;
     if (cardSet.key === CustomCardSet) {
-      this.estimatorService.setRoomCustomCardSetValue(
-        this.room.roomId,
-        cardSet
-      );
+      this.estimatorService.setRoomCustomCardSetValue(this.room.roomId, cardSet);
     } else {
       this.estimatorService.setRoomCardSet(this.room.roomId, cardSet.key);
     }
+    this.authService.updateUserPreference({ lastUsedCardSet: cardSet.key }).subscribe();
   }
 
   toggleShowPassOption() {
