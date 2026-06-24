@@ -110,9 +110,16 @@
               <h4>Jira</h4>
             </div>
             <p>
-              Select tickets from your recent history and search right from the
-              topic editor.
+              Connect your Jira project to estimate issues without switching
+              tabs.
             </p>
+            @if (!(jiraIntegration$ | async)) {
+              <ul class="integration-benefits">
+                <li>Browse and search Jira issues directly in the topic editor</li>
+                <li>Pull in issue title, description and story points automatically</li>
+                <li>Save estimates back to your Jira tickets after the session</li>
+              </ul>
+            }
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startJiraAuth()">
@@ -163,9 +170,16 @@
               <h4>Linear</h4>
             </div>
             <p>
-              Select tickets from your recent history and search right from the
-              topic editor.
+              Connect your Linear workspace to bring issues into your estimation
+              sessions.
             </p>
+            @if (!(linearIntegration$ | async)) {
+              <ul class="integration-benefits">
+                <li>Browse and search Linear issues directly in the topic editor</li>
+                <li>Import issue titles and descriptions with one click</li>
+                <li>Write story-point estimates back to Linear after voting</li>
+              </ul>
+            }
           </div>
           <div class="actions">
             <button mat-flat-button color="primary" (click)="startLinearAuth()">

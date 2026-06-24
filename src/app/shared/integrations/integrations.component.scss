@@ -50,6 +50,18 @@
       color: var(--text-on-white);
       margin-bottom: 0;
     }
+
+    .integration-benefits {
+      margin: 0.5rem 0 0 0;
+      padding-left: 1.2rem;
+      color: var(--text-on-white);
+      opacity: 0.75;
+      font-size: 0.85rem;
+
+      li {
+        margin-bottom: 0.2rem;
+      }
+    }
   }
 
   .actions {
