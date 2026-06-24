@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { EstimatorService } from '../services/estimator.service';
+import { EstimatorService, RoomNotFoundError } from '../services/estimator.service';
 import { Router, ActivatedRoute, RouterModule, Params } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -402,7 +402,10 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
         switchMap(() =>
           from(this.joinRoom()).pipe(
             catchError(e => {
-              if (e.code !== 'permission-denied') {
+              if (e instanceof RoomNotFoundError) {
+                this.showRoomNotFound();
+                return of(false);
+              } else if (e.code !== 'permission-denied') {
                 this.showUnableToJoinRoom();
                 return of(false);
               } else {
@@ -547,6 +550,14 @@ export class CreateOrJoinRoomComponent implements OnInit, OnDestroy {
       'Unable to join room. Please check the ID and try again.',
       null,
       { duration: 3000, horizontalPosition: 'right' }
+    );
+  }
+
+  showRoomNotFound() {
+    this.snackBar.open(
+      `No room found with ID "${this.roomId.value}". Double-check the ID and try again.`,
+      null,
+      { duration: 5000, horizontalPosition: 'right' }
     );
   }
 
