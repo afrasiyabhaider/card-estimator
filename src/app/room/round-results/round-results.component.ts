@@ -39,6 +39,7 @@ import {
 import { overrideMajorityVodeModalCreator } from '../override-majority-vote-modal/override-majority-vote-modal.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { RoomDataService } from '../room-data.service';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 import { EstimateConverterPipe } from '../../pipes/estimate-converter.pipe';
 import { MatDivider } from '@angular/material/divider';
 import {
@@ -148,7 +149,8 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
     readonly organizationService: OrganizationService,
     public readonly permissionsService: PermissionsService,
     private readonly roomDataService: RoomDataService,
-    private readonly reactionsService: ReactionsService
+    private readonly reactionsService: ReactionsService,
+    private readonly confirmService: ConfirmDialogService
   ) {}
 
   ngOnInit() {
@@ -261,6 +263,13 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   }
 
   async removeMember(member: Member) {
+    const confirmed = await this.confirmService.openConfirmationDialog({
+      title: `Remove ${member.name}?`,
+      content: `${member.name} will be removed from this room. Their votes will be kept.`,
+      positiveText: 'Remove',
+      negativeText: 'Cancel',
+    });
+    if (!confirmed) return;
     await this.estimatorService.updateMemberStatus(
       this.room().roomId,
       member,
