@@ -335,3 +335,18 @@
 :host-context(.dark-theme) .pass-option-button:not(.mat-accent):not(.selected) {
   background-color: rgba(255, 255, 255, 0.06);
 }
+
+.estimator-button.selected {
+  background-color: var(--primary-color, #345ca8) !important;
+  color: #fff !important;
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 6px 20px rgba(52, 92, 168, 0.5) !important;
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+:host-context(.dark-theme) .estimator-button.selected {
+  background-color: #4d7cd4 !important;
+  box-shadow: 0 6px 20px rgba(77, 124, 212, 0.6) !important;
+}
