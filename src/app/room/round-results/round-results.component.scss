@@ -239,6 +239,35 @@ mat-list-item.statistic-line {
     gap: 8px;
   }
 
+  .vote-waiting {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: none !important;
+    gap: 4px;
+    font-size: 11px !important;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0 10px !important;
+
+    .hourglass {
+      opacity: 0.7;
+    }
+  }
+
+  .vote-waiting-label {
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vote-voted {
+    background: rgba(52, 200, 120, 0.2) !important;
+    color: rgba(52, 200, 120, 0.9) !important;
+    box-shadow: none !important;
+  }
+
   .vote {
     background: linear-gradient(135deg, var(--main-dark-highlight-color) 0%, #0d2d5a 100%);
     border-radius: 20px;

@@ -271,15 +271,15 @@
                         <mat-icon>notifications_active</mat-icon>
                       </button>
                     }
-                    <div class="vote vote-waiting" matTooltip="Waiting to vote">
+                    <div class="vote vote-waiting">
                       <mat-icon class="hourglass">hourglass_bottom</mat-icon>
+                      <span class="vote-waiting-label">Waiting</span>
                     </div>
-                    
                   </div>
                 }
                 @if (memberEstimate !== undefined && !round?.show_results) {
                   <div class="vote vote-voted" matTooltip="Voted">
-                    <mat-icon>checked</mat-icon>
+                    <mat-icon>check</mat-icon>
                   </div>
                 }
               }
