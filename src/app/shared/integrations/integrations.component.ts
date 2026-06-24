@@ -23,8 +23,10 @@ import { LinearService } from 'src/app/services/linear.service';
 import { AsyncPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SlackService } from 'src/app/services/slack.service';
+import { ConfirmDialogService } from '../confirm-dialog/confirm-dialog.service';
 
 export const integrationsModalCreator =
   (): ModalCreator<IntegrationsComponent> => [
@@ -50,6 +52,7 @@ export const integrationsModalCreator =
     MatButton,
     MatRadioGroup,
     MatRadioButton,
+    MatIcon,
     AsyncPipe,
   ],
 })
@@ -66,7 +69,8 @@ export class IntegrationsComponent {
     private readonly linearService: LinearService,
     private readonly slackService: SlackService,
     private readonly toastService: ToastService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly confirmDialog: ConfirmDialogService
   ) {}
 
   onJiraProjectSelected(resource: JiraResource) {
@@ -93,7 +97,15 @@ export class IntegrationsComponent {
     this.dialog.open(...configureJiraModalCreator(resource));
   }
 
-  onJiraProjectRemoveClicked(resource: JiraResource) {
+  async onJiraProjectRemoveClicked(resource: JiraResource) {
+    const confirmed = await this.confirmDialog.openConfirmationDialog({
+      title: 'Disconnect Jira?',
+      content: `Remove "${resource.name || resource.url}" from your integrations? You can reconnect anytime.`,
+      positiveText: 'Disconnect',
+      negativeText: 'Cancel',
+    });
+    if (!confirmed) return;
+
     return this.jiraIntegration$
       .pipe(
         switchMap(jiraIntegration => {
@@ -141,15 +153,31 @@ export class IntegrationsComponent {
     this.linearService.startLinearAuthFlow();
   }
 
-  removeLinearIntegration() {
-    this.linearService.removeLinearIntegration().subscribe();
+  async removeLinearIntegration() {
+    const confirmed = await this.confirmDialog.openConfirmationDialog({
+      title: 'Disconnect Linear?',
+      content: 'Remove your Linear integration? You can reconnect anytime.',
+      positiveText: 'Disconnect',
+      negativeText: 'Cancel',
+    });
+    if (confirmed) {
+      this.linearService.removeLinearIntegration().subscribe();
+    }
   }
 
   startSlackAuth() {
     this.slackService.startSlackAuthFlow();
   }
 
-  removeSlackIntegration() {
-    this.slackService.removeSlackIntegration().subscribe();
+  async removeSlackIntegration() {
+    const confirmed = await this.confirmDialog.openConfirmationDialog({
+      title: 'Disconnect Slack?',
+      content: 'Remove your Slack integration? You can reconnect anytime.',
+      positiveText: 'Disconnect',
+      negativeText: 'Cancel',
+    });
+    if (confirmed) {
+      this.slackService.removeSlackIntegration().subscribe();
+    }
   }
 }
