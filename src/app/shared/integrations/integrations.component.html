@@ -108,6 +108,16 @@
             <div class="title">
               <img class="integration-logo" src="/assets/jira.png" />
               <h4>Jira</h4>
+              @if ((jiraIntegration$ | async)?.jiraResources; as projects) {
+                @for (project of projects; track project.id) {
+                  @if (project.active) {
+                    <span class="integration-status-chip">
+                      <mat-icon class="status-icon">check_circle</mat-icon>
+                      {{ project.name || project.url }}
+                    </span>
+                  }
+                }
+              }
             </div>
             <p>
               Select tickets from your recent history and search right from the
@@ -161,6 +171,12 @@
             <div class="title">
               <img class="integration-logo" src="/assets/linear.png" />
               <h4>Linear</h4>
+              @if (linearIntegration$ | async) {
+                <span class="integration-status-chip">
+                  <mat-icon class="status-icon">check_circle</mat-icon>
+                  Connected
+                </span>
+              }
             </div>
             <p>
               Select tickets from your recent history and search right from the

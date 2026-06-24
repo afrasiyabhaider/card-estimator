@@ -23,6 +23,7 @@ import { LinearService } from 'src/app/services/linear.service';
 import { AsyncPipe } from '@angular/common';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatAnchor, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SlackService } from 'src/app/services/slack.service';
 
@@ -50,6 +51,7 @@ export const integrationsModalCreator =
     MatButton,
     MatRadioGroup,
     MatRadioButton,
+    MatIcon,
     AsyncPipe,
   ],
 })

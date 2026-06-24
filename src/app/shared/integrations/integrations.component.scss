@@ -52,6 +52,26 @@
     }
   }
 
+  .integration-status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(52, 168, 83, 0.12);
+    color: #1e7e34;
+    border-radius: 12px;
+    padding: 2px 8px 2px 4px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+
+    .status-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: #1e7e34;
+    }
+  }
+
   .actions {
     display: flex;
     align-items: center;
