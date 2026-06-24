@@ -110,7 +110,8 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   userProfiles = signal<UserProfileMap>({});
   currentUserId = signal<string | undefined>(undefined);
   showNudgeButtons = signal<boolean>(false);
-  
+  votesCollapsed = signal<boolean>(true);
+
   private nudgeTimerHandle?: ReturnType<typeof setTimeout>;
 
   isAnonymousVotingEnabled = this.roomDataService.room$.pipe(
@@ -139,6 +140,17 @@ export class RoundResultsComponent implements OnInit, OnDestroy {
   );
 
   readonly MemberType = MemberType;
+
+  votedCount(): number {
+    const estimates = this.room()?.rounds?.[this.currentRound()]?.estimates ?? {};
+    return this.membersSignal().filter(
+      m => m.type === MemberType.ESTIMATOR && estimates[m.id] !== undefined
+    ).length;
+  }
+
+  estimatorCount(): number {
+    return this.membersSignal().filter(m => m.type === MemberType.ESTIMATOR).length;
+  }
 
   constructor(
     private readonly estimatorService: EstimatorService,

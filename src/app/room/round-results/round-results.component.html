@@ -162,8 +162,23 @@
         </ng-container>
       </mat-list>
     }
-    <h3 matSubheader class="subheader">Votes</h3>
-    <div class="votes nice-scrollbar">
+    <button
+      class="votes-header-toggle"
+      (click)="votesCollapsed.set(!votesCollapsed())"
+      [attr.aria-expanded]="!votesCollapsed()"
+      aria-controls="votes-list">
+      <h3 matSubheader class="subheader">
+        Votes
+        @if (estimatorCount() > 0) {
+          <span class="votes-summary">({{ votedCount() }}/{{ estimatorCount() }})</span>
+        }
+      </h3>
+      <mat-icon class="votes-toggle-icon" [class.expanded]="!votesCollapsed()">expand_more</mat-icon>
+    </button>
+    <div
+      class="votes nice-scrollbar"
+      id="votes-list"
+      [class.votes-collapsed]="votesCollapsed()">
       @for (member of members | async; track member.id) {
         <div class="vote-container">
           <div class="vote-avatar">

@@ -61,6 +61,50 @@ mat-chip-set {
   opacity: 0.6;
 }
 
+.votes-summary {
+  margin-left: 0.25rem;
+  font-weight: 400;
+}
+
+.votes-header-toggle {
+  display: none;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+
+  .subheader {
+    margin-bottom: 0;
+  }
+
+  .votes-toggle-icon {
+    opacity: 0.5;
+    transition: transform 0.2s ease;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
+
+  @include smallScreen {
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.votes-collapsed {
+  @include smallScreen {
+    display: none;
+  }
+}
+
 mat-list-item.statistic-line {
   height: unset;
 
