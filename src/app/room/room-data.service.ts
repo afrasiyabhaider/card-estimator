@@ -11,6 +11,7 @@ import {
   Subscription,
   catchError,
   EMPTY,
+  timer,
 } from 'rxjs';
 import {
   CardSet,
@@ -40,6 +41,8 @@ import { ConfirmDialogService } from '../shared/confirm-dialog/confirm-dialog.se
 })
 export class RoomDataService {
   roomSubject = new BehaviorSubject<Room | undefined>(undefined);
+  loadError = new BehaviorSubject<string | null>(null);
+
   room$: Observable<Room> = this.roomSubject.pipe(
     filter(room => !!room?.rounds)
   );
@@ -184,6 +187,7 @@ export class RoomDataService {
   );
 
   roomSubscription: Subscription;
+  private loadTimeoutSub: Subscription | null = null;
 
   constructor(
     private readonly estimatorService: EstimatorService,
@@ -195,18 +199,32 @@ export class RoomDataService {
   ) {}
 
   loadRoom(roomId: string, startWithRoom?: Room) {
+    this.loadError.next(null);
+    this.loadTimeoutSub?.unsubscribe();
+
     if (startWithRoom) {
       this.roomSubject.next(startWithRoom);
     }
+
+    this.loadTimeoutSub = timer(10000).subscribe(() => {
+      if (!this.roomSubject.value?.rounds) {
+        this.loadError.next(
+          'The room could not be loaded. Check your connection and try again.'
+        );
+      }
+    });
 
     this.roomSubscription = this.estimatorService
       .getRoomById(roomId)
       .pipe(
         catchError(error => {
+          this.loadTimeoutSub?.unsubscribe();
           return this.onRoomUpdateError(error);
         })
       )
       .subscribe(room => {
+        this.loadTimeoutSub?.unsubscribe();
+        this.loadError.next(null);
         if (this.localActiveRound.value === undefined) {
           this.localActiveRound.next(room.currentRound ?? 0);
         }
@@ -217,6 +235,8 @@ export class RoomDataService {
   leaveRoom() {
     this.roomSubject.next(undefined);
     this.localActiveRound.next(undefined);
+    this.loadError.next(null);
+    this.loadTimeoutSub?.unsubscribe();
     this.roomSubscription.unsubscribe();
   }
 

@@ -464,6 +464,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     distinctUntilChanged()
   );
 
+  roomLoadError$ = this.roomDataService.loadError.asObservable();
+
   readonly MemberType = MemberType;
   readonly observableOf = observableOf;
 
@@ -1368,5 +1370,15 @@ export class RoomComponent implements OnInit, OnDestroy {
       },
     ]);
     this.shepherdService.start();
+  }
+
+  goHome() {
+    this.router.navigate(['/']);
+  }
+
+  retryLoad() {
+    const roomId = this.route.snapshot.paramMap.get('roomId');
+    this.roomDataService.leaveRoom();
+    this.roomDataService.loadRoom(roomId);
   }
 }
